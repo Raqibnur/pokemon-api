@@ -1,30 +1,18 @@
-import { useRouter } from "next/router"
-import { useEffect , useState } from "react";
 import Link from "next/link";
 import style from "../../styles/pokeman.module.css"
 import Head from "next/head";
 
+export async function getServerSideProps({params}){
+    const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${params.id}.json`)
 
+    return{
+        props:{
+            pokemon: await resp.json()
+        }
+    }
+}
 
 export default function details({pokemon}){
-    const [pokemon, setPokemon] = useState(null);
-
-    useEffect(()=>{
-        async function getPokemon(){
-            const resp = await fetch(`https://jherr-pokemon.s3.us-west-1.amazonaws.com/pokemon/${id}.json`);
-            setPokemon(await resp.json());
-        }
-        if(id){
-            getPokemon()
-        }
-    }, [])
-
-    const {query : {id} }= useRouter();
-    
-    if(!pokemon){
-        return null;
-    }
-
     return(
         <div>
             <Head>
